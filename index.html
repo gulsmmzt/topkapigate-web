@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOPKAPI GATE | Güvenli ve Akıllı Geçit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+
+    .intro-exit {
+      opacity: 0 !important;
+      transform: scale(1.05) !important;
+      filter: blur(6px) !important;
+      pointer-events: none;
+    }
+    .main-enter {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
+      filter: blur(0px) !important;
+    }
+  </style>
+</head>
+<body class="bg-[#0A74DA] text-white min-h-screen selection:bg-[#FFD230] selection:text-black overflow-x-hidden flex flex-col justify-between relative">
+
+  <!-- TEKNOLOJİK ARKA PLAN CANVAS'I -->
+  <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0 w-full h-full"></canvas>
+
+  <!-- 1. GİRİŞ (INTRO) EKRANI -->
+  <div id="intro-screen" onclick="enterSite()" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0A74DA] cursor-pointer transition-all duration-700 ease-out select-none">
+    <div class="absolute w-[500px] h-[500px] bg-[#38BDF8]/25 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex items-center justify-center px-8 py-5 sm:px-10 sm:py-6 rounded-2xl bg-[#FAF9F5] border border-white/40 shadow-2xl shadow-blue-950/30 hover:scale-105 transition-transform duration-300">
+      <img src="topkapiLogo.jpg" alt="TOPKAPI GATE Logo" class="h-16 sm:h-20 w-auto object-contain mix-blend-multiply">
+    </div>
+
+    <div class="absolute bottom-10 flex items-center gap-2 text-sky-100 text-xs sm:text-sm font-medium animate-bounce">
+      <span>Giriş Yapmak İçin Tıklayın</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7-7m7-7H3"></path></svg>
+    </div>
+  </div>
+
+  <!-- YAN MENÜ (DRAWER) -->
+  <div id="side-drawer" class="fixed inset-0 z-[90] pointer-events-none">
+    <div id="drawer-backdrop" onclick="toggleMenu()" class="absolute inset-0 bg-slate-950/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-auto hidden"></div>
+    
+    <aside id="drawer-panel" class="absolute top-0 right-0 h-full w-80 sm:w-96 bg-[#0B132B] border-l border-slate-800 text-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out p-8 flex flex-col justify-between pointer-events-auto">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-slate-800 mb-8">
+          <span class="font-heading font-extrabold text-xl tracking-wider text-[#FFD230]">MENÜ</span>
+          <button onclick="toggleMenu()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">
+            ✕
+          </button>
+        </div>
+
+        <nav class="space-y-5 text-base font-medium">
+          <a href="./blog.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-slate-200 hover:text-[#FFD230] transition-colors p-2 rounded-lg hover:bg-slate-900">
+            <span>📝</span> <span>Blog Yazılarımız</span>
+          </a>
+          <a href="./fpga.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-slate-200 hover:text-[#FFD230] transition-colors p-2 rounded-lg hover:bg-slate-900">
+            <span>⚡</span> <span>FPGA Nedir?</span>
+          </a>
+          <a href="./yolculugumuz.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-slate-200 hover:text-[#FFD230] transition-colors p-2 rounded-lg hover:bg-slate-900">
+            <span>🗿</span> <span>Yolculuğumuz</span>
+          </a>
+          <a href="./join.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-slate-200 hover:text-[#FFD230] transition-colors p-2 rounded-lg hover:bg-slate-900">
+            <span>🤝</span> <span>Takım Üyesi Ol</span>
+          </a>
+          <a href="./sorular.html" onclick="toggleMenu()" class="flex items-center space-x-3 text-slate-200 hover:text-[#FFD230] transition-colors p-2 rounded-lg hover:bg-slate-900">
+            <span>❓</span> <span>En Çok Sorulanlar (SSS)</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-xs text-slate-400 text-center">
+        <p>TOPKAPI GATE &copy; 2026</p>
+        <p class="mt-1 text-slate-500">Yenilikçi Gömülü Sistemler Projesi</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 2. ANA WEB SİTESİ -->
+  <div id="main-content" class="opacity-0 translate-y-6 blur-md transition-all duration-1000 ease-out flex-1 flex flex-col justify-between relative z-10">
+    
+    <div>
+      <!-- HEADER -->
+      <header class="sticky top-0 z-50 bg-[#0A74DA]/95 backdrop-blur-md border-b border-white/20 px-6 py-3 shadow-md">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          
+          <a href="index.html" class="flex items-center space-x-4">
+            <div class="bg-[#FAF9F5] px-2.5 py-1 rounded-lg shadow-sm">
+              <img src="topkapiLogo.jpg" alt="TOPKAPI GATE Logo" class="h-7 w-auto object-contain mix-blend-multiply">
+            </div>
+            <div class="h-5 w-[1px] bg-white/30"></div>
+            <span class="text-xs font-bold text-sky-100 uppercase tracking-wider">TOPKAPI GATE</span>
+          </a>
+
+          <div class="flex items-center gap-3">
+            <a 
+              href="admin.html" 
+              class="text-xs font-bold text-slate-950 bg-[#FFD230] hover:bg-[#e6bd28] px-3.5 py-2 rounded-xl shadow-md transition-all flex items-center gap-1.5"
+            >
+              <span>Giriş Yap</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+            </a>
+
+            <button onclick="toggleMenu()" class="flex items-center space-x-1.5 bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-2 rounded-xl transition-all">
+              <span class="text-xs font-bold hidden sm:inline-block">Menü</span>
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- HERO SECTION -->
+      <section class="relative pt-12 pb-8 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="font-heading text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-2 leading-tight drop-shadow-sm">
+            Geçmişin kapısından, geleceğin mimarisine. <br>
+            <span class="text-[#FFD230]">TOPKAPI GATE</span>
+          </h1>
+        </div>
+      </section>
+
+      <!-- HAKKIMIZDA -->
+      <section id="about" class="max-w-6xl mx-auto px-6 py-10">
+        <div class="text-center mb-10">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold">Projemizi Yakından Tanıyın</h2>
+          <p class="text-sky-100 mt-2">Geliştirdiğimiz yenilikçi donanım ve yazılım mimarisi.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-[#0A74DA]/90 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:border-[#FFD230]/50 transition-all">
+            <div class="text-3xl mb-4">👥</div>
+            <h3 class="font-heading text-xl font-bold mb-2 text-[#FFD230]">Biz Kimiz?</h3>
+            <p class="text-sky-100 text-sm leading-relaxed">
+              Farklı mühendislik disiplinlerinden gelen genç ve dinamik araştırmacılardan oluşan tutkulu bir teknoloji takımıyız. Gömülü sistemler, donanım mimarileri ve yazılım entegrasyonu alanlarında yenilikçi çözümler üretiyoruz.
+            </p>
+          </div>
+
+          <div class="bg-[#0A74DA]/90 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:border-[#FFD230]/50 transition-all">
+            <div class="text-3xl mb-4">🎯</div>
+            <h3 class="font-heading text-xl font-bold mb-2 text-[#FFD230]">Vizyonumuz</h3>
+            <p class="text-sky-100 text-sm leading-relaxed">
+              Yüksek performanslı gömülü sistemler ve FPGA mimarilerinde yerli çözümler geliştirerek küresel ölçekte öncü olmak.
+            </p>
+          </div>
+
+          <div class="bg-[#0A74DA]/90 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:border-[#FFD230]/50 transition-all">
+            <div class="text-3xl mb-4">🚀</div>
+            <h3 class="font-heading text-xl font-bold mb-2 text-[#FFD230]">Misyonumuz</h3>
+            <p class="text-sky-100 text-sm leading-relaxed">
+              Geleneksel mikrodenetleyici mimarilerini FPGA teknolojisinin esnek ve yenilikçi yöntemleriyle harmanlayarak; veriyi daha hızlı, güvenilir ve optimize biçimde işleyen çözümler geliştirmektir.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-[#050B1A] border-t border-slate-800 text-slate-300 pt-16 pb-12 px-6 mt-20 relative z-10">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-[#FAF9F5] p-1.5 rounded-lg">
+              <img src="topkapiLogo.jpg" alt="Logo" class="h-6 w-auto mix-blend-multiply">
+            </div>
+            <span class="font-heading font-bold text-white text-lg">TOPKAPI GATE</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
+            Geçmişin kapısından, geleceğin mimarisine.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-4 font-heading text-sm uppercase tracking-wider">Hızlı Erişim</h4>
+          <ul class="space-y-2 text-xs text-slate-400">
+            <li><a href="#about" class="hover:text-[#FFD230] transition-colors">Biz Kimiz / Vizyon / Misyon</a></li>
+            <li><a href="./blog.html" class="hover:text-[#FFD230] transition-colors">Blog Yazılarımız</a></li>
+            <li><a href="./fpga.html" class="hover:text-[#FFD230] transition-colors">FPGA Mimarisi</a></li>
+            <li><a href="./sorular.html" class="hover:text-[#FFD230] transition-colors">Sıkça Sorulan Sorular (SSS)</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold mb-4 font-heading text-sm uppercase tracking-wider">İletişim</h4>
+          <ul class="space-y-2.5 text-xs text-slate-400">
+            <li class="flex items-center space-x-2">
+              <span>📍</span> <span>İstanbul, Türkiye</span>
+            </li>
+            <li class="flex items-center space-x-2">
+              <span>✉️</span> <span>topkapigate@gmail.com</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto pt-8 mt-12 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p>&copy; 2026 TOPKAPI GATE. Tüm hakları saklıdır.</p>
+        <p class="mt-2 sm:mt-0">İleri Teknoloji Çözümleri 🚀</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- JAVASCRIPT KODLARI -->
+  <script>
+    // INTRO & MENÜ FONKSİYONLARI
+    function enterSite() {
+      const introScreen = document.getElementById('intro-screen');
+      const mainContent = document.getElementById('main-content');
+
+      introScreen.classList.add('intro-exit');
+      sessionStorage.setItem('hasEntered', 'true');
+
+      setTimeout(() => {
+        mainContent.classList.add('main-enter');
+      }, 150);
+
+      setTimeout(() => {
+        introScreen.style.display = 'none';
+      }, 750);
+    }
+
+    function toggleMenu() {
+      const drawerBackdrop = document.getElementById('drawer-backdrop');
+      const drawerPanel = document.getElementById('drawer-panel');
+
+      if (drawerPanel.classList.contains('translate-x-full')) {
+        drawerBackdrop.classList.remove('hidden');
+        setTimeout(() => drawerBackdrop.classList.remove('opacity-0'), 10);
+        drawerPanel.classList.remove('translate-x-full');
+      } else {
+        drawerBackdrop.classList.add('opacity-0');
+        drawerPanel.classList.add('translate-x-full');
+        setTimeout(() => drawerBackdrop.classList.add('hidden'), 300);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const introScreen = document.getElementById('intro-screen');
+      const mainContent = document.getElementById('main-content');
+
+      if (sessionStorage.getItem('hasEntered') === 'true' || window.location.search.includes('skipIntro')) {
+        if (introScreen) introScreen.style.display = 'none';
+        if (mainContent) mainContent.classList.add('main-enter');
+      }
+    });
+
+    // TEKNOLOJİK ÇİP / MATRIX DESENİ (85 ADET DENGELİ DAĞILIM)
+    (function() {
+      const canvas = document.getElementById('particle-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let elements = [];
+
+      const COUNT = 85; // 45'ten 85'e çıkarıldı
+      const MOUSE_RADIUS = 110;
+      const mouse = { x: -1000, y: -1000 };
+
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      });
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', () => { resize(); init(); });
+
+      class TechNode {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.size = Math.random() * 3.5 + 3;
+          this.vx = (Math.random() - 0.5) * 0.25;
+          this.vy = (Math.random() - 0.5) * 0.25 - 0.1;
+          this.type = Math.random() > 0.4 ? 'square' : 'cross';
+          this.color = Math.random() > 0.5 ? '#FFD230' : '#38BDF8';
+          this.alpha = Math.random() * 0.3 + 0.55;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+            this.reset();
+            this.y = height + 10;
+          }
+
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < MOUSE_RADIUS) {
+            const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+            this.x -= (dx / dist) * force * 1.5;
+            this.y -= (dy / dist) * force * 1.5;
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.strokeStyle = this.color;
+          ctx.fillStyle = this.color;
+          ctx.lineWidth = 1.5;
+
+          if (this.type === 'square') {
+            ctx.strokeRect(this.x, this.y, this.size, this.size);
+          } else {
+            const arm = this.size * 0.8;
+            ctx.beginPath();
+            ctx.moveTo(this.x - arm, this.y);
+            ctx.lineTo(this.x + arm, this.y);
+            ctx.moveTo(this.x, this.y - arm);
+            ctx.lineTo(this.x, this.y + arm);
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      function init() {
+        elements = [];
+        for (let i = 0; i < COUNT; i++) {
+          elements.push(new TechNode());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        elements.forEach(el => {
+          el.update();
+          el.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      resize();
+      init();
+      animate();
+    })();
+  </script>
+</body>
+</html>

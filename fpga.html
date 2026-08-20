@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPGA Mimarisi | TOPKAPI GATE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#0A74DA] text-white min-h-screen selection:bg-[#FFD230] selection:text-black flex flex-col justify-between">
+  
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 bg-[#0A74DA] border-b border-white/20 px-6 py-3 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="index.html?skipIntro=true" class="flex items-center space-x-4">
+        <div class="bg-[#FAF9F5] px-2.5 py-1 rounded-lg shadow-sm">
+          <img src="topkapiLogo.jpg" alt="TOPKAPI GATE Logo" class="h-7 w-auto object-contain mix-blend-multiply">
+        </div>
+        <div class="h-5 w-[1px] bg-white/30"></div>
+        <span class="text-xs font-bold text-sky-100 uppercase tracking-wider">TOPKAPI GATE</span>
+      </a>
+      
+      <div class="flex items-center gap-3">
+        <a href="index.html?skipIntro=true" class="text-xs font-semibold text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 px-3.5 py-2 rounded-xl transition-all">
+          ← Ana Sayfa
+        </a>
+        <a 
+          href="admin.html" 
+          class="text-xs font-bold text-slate-950 bg-[#FFD230] hover:bg-[#e6bd28] px-3.5 py-2 rounded-xl shadow-md transition-all"
+        >
+          Giriş Yap
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- İÇERİK -->
+  <main class="max-w-6xl mx-auto px-6 py-10 flex-1 w-full">
+    <div class="text-center mb-10">
+      <h1 class="font-heading text-3xl sm:text-5xl font-extrabold text-white mb-2">FPGA Mimarisi ve Bileşenleri</h1>
+      <p class="text-sky-100 text-sm max-w-lg mx-auto">Kart üzerindeki bileşenleri incelemek için renkli butonlara tıklayın.</p>
+    </div>
+
+    <!-- GÖRSEL VE DETAY KUTUSU -->
+    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 md:p-8 shadow-2xl mb-12 flex flex-col lg:flex-row items-center gap-8 justify-between">
+      <div class="relative w-full max-w-md rounded-2xl overflow-hidden border border-white/20 shadow-lg">
+        <img src="FPGA.jpg" alt="DE10-Lite FPGA Board" class="w-full h-auto object-cover rounded-2xl">
+
+        <button onclick="showInfo('chip')" class="absolute top-[48%] left-[53%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-7 h-7 focus:outline-none">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFD230] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-[#FFD230] border-2 border-slate-950 shadow-lg"></span>
+        </button>
+
+        <button onclick="showInfo('display')" class="absolute top-[82%] left-[42%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-7 h-7 focus:outline-none">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-300 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-sky-300 border-2 border-slate-950 shadow-lg"></span>
+        </button>
+
+        <button onclick="showInfo('sdram')" class="absolute top-[62%] left-[28%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-7 h-7 focus:outline-none">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-300 border-2 border-slate-950 shadow-lg"></span>
+        </button>
+
+        <button onclick="showInfo('switches')" class="absolute top-[72%] left-[83%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-7 h-7 focus:outline-none">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-300 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-4 w-4 bg-purple-300 border-2 border-slate-950 shadow-lg"></span>
+        </button>
+      </div>
+
+      <div id="info-box" class="w-full lg:w-1/2 bg-[#0B132B]/80 border border-slate-800 rounded-2xl p-6 transition-all duration-300">
+        <div class="flex items-center gap-3 mb-3">
+          <span id="info-badge" class="w-3.5 h-3.5 rounded-full bg-[#FFD230]"></span>
+          <h3 id="info-title" class="font-heading text-xl font-bold text-white">Intel MAX 10 FPGA Çipi</h3>
+        </div>
+        <p id="info-desc" class="text-slate-300 text-sm leading-relaxed mb-4">
+          Kartın kalbidir. 50K mantıksal elemana (LE) sahip, dahili Flash bellek barındıran ve anında açılan (Instant-on) bir entegredir.
+        </p>
+        <span class="text-xs text-slate-400">💡 Farklı bileşenler için görseldeki noktalara tıklayın.</span>
+      </div>
+    </div>
+
+    <!-- 3 MADDE -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl">
+        <div class="text-3xl mb-3">⚡</div>
+        <h3 class="font-heading text-lg font-bold mb-2 text-[#FFD230]">FPGA Ne İşe Yarar?</h3>
+        <p class="text-sky-100 text-xs leading-relaxed">FPGA (Field Programmable Gate Array), üretim sonrasında donanımsal mimarisi ihtiyaçlara göre tekrar tekrar programlanabilen esnek bir entegre devredir. Geleneksel işlemciler gibi komutları sırayla çalıştırmak yerine, kodu doğrudan fiziksel donanım bağlantılarına dönüştürerek yüksek hızlı ve paralel bir çalışma imkanı sunar.</p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl">
+        <div class="text-3xl mb-3">🛰️</div>
+        <h3 class="font-heading text-lg font-bold mb-2 text-[#FFD230]">Nerede Kullanılır?</h3>
+        <p class="text-sky-100 text-xs leading-relaxed">Yüksek hız, paralellik, düşük gecikme ve donanımın yazılım gibi davranması gereken kritik sistem çözümlerinde kullanılır. Savunma sanayi, havacılık, telekomünikasyon (5G altyapısı) ve otomotiv gibi alanlarda; sinyal işleme, görüntü işleme ve gerçek zamanlı veri akışlarını yönetmek için kullanılır.</p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl">
+        <div class="text-3xl mb-3">💻</div>
+        <h3 class="font-heading text-lg font-bold mb-2 text-[#FFD230]">Nasıl Geliştirilir?</h3>
+        <p class="text-sky-100 text-xs leading-relaxed">Sistem gereksinimleri tamamlandıktan sonra FPGA geliştirme, Verilog veya VHDL gibi donanım tanımlama dilleri (HDL) ile mantıksal mimarinin koda dökülmesiyle başlar. Yazdığınız kod simülasyon adımlarından geçip sentezlenerek bit akış (bitstream) dosyası halinde karta yüklenir.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#050B1A] border-t border-slate-800 text-slate-400 py-6 text-center text-xs">
+    <p>&copy; 2026 TOPKAPI GATE. Tüm hakları saklıdır.</p>
+  </footer>
+
+  <script>
+    const fpgaComponents = {
+      chip: { title: "Intel MAX 10 FPGA Çipi", color: "bg-[#FFD230]", desc: "Kartın kalbidir. 50K mantıksal elemana (LE) sahip, dahili Flash bellek barındıran ve anında açılan bir entegredir." },
+      display: { title: "6 Adet 7-Segment Display", color: "bg-sky-300", desc: "Kart üzerindeki sayaç, saat veya test verilerini sayısal/harf formatında anlık görüntülemek için kullanılır." },
+      sdram: { title: "64 MB SDRAM Bellek", color: "bg-emerald-300", desc: "Yüksek hızlı harici bellektir. Yüksek miktarda veri depolaması gerektiğinde kullanılır." },
+      switches: { title: "Kullanıcı Switch & LED Dizisi", color: "bg-purple-300", desc: "Devreye manuel mantıksal giriş (1 ve 0) vermeyi sağlayan anahtarlar ve durum kontrol LED'leridir." }
+    };
+
+    function showInfo(key) {
+      const infoBox = document.getElementById('info-box');
+      const titleEl = document.getElementById('info-title');
+      const descEl = document.getElementById('info-desc');
+      const badgeEl = document.getElementById('info-badge');
+      const data = fpgaComponents[key];
+
+      infoBox.classList.add('opacity-40');
+      setTimeout(() => {
+        titleEl.innerText = data.title;
+        descEl.innerText = data.desc;
+        badgeEl.className = `w-3.5 h-3.5 rounded-full ${data.color}`;
+        infoBox.classList.remove('opacity-40');
+      }, 150);
+    }
+  </script>
+
+</body>
+</html>

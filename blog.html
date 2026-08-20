@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog & Güncellemeler | TOPKAPI GATE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#0A74DA] text-white min-h-screen flex flex-col justify-between selection:bg-[#FFD230] selection:text-black">
+
+  <!-- HEADER -->
+  <header class="bg-[#0A74DA]/90 backdrop-blur-md border-b border-white/20 px-6 py-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="index.html" class="flex items-center space-x-3">
+        <div class="bg-[#FAF9F5] px-2 py-1 rounded-lg">
+          <img src="topkapiLogo.jpg" alt="Logo" class="h-6 w-auto mix-blend-multiply">
+        </div>
+        <span class="font-heading font-bold text-sm tracking-wider uppercase">TOPKAPI GATE</span>
+      </a>
+
+      <div class="flex items-center gap-4 text-xs font-semibold">
+        <a href="index.html" class="text-sky-100 hover:text-white transition-colors">Ana Sayfa</a>
+        <a href="blog.html" class="text-[#FFD230]">Blog</a>
+        <a href="admin.html" class="bg-[#FFD230] text-slate-950 px-3 py-1.5 rounded-xl hover:bg-[#e6bd28] transition-all">Giriş Yap</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- BLOG LİSTESİ -->
+  <main class="max-w-6xl mx-auto px-6 py-12 flex-1 w-full">
+    <div class="text-center mb-12">
+      <h1 class="font-heading text-4xl sm:text-5xl font-extrabold tracking-tight">Blog & Güncellemeler</h1>
+      <p class="text-sky-100 mt-3 text-sm sm:text-base">TOPKAPI GATE projemizle ilgili en son donanım güncellemeleri ve teknik yazılar.</p>
+    </div>
+
+    <!-- YAZILARIN LİSTELENECEĞİ ALAN -->
+    <div id="posts-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-12 text-sky-200">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-white border-t-transparent mb-3"></div>
+        <p class="text-sm">Yazılar yükleniyor...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#050B1A] border-t border-slate-800 text-slate-400 py-6 text-center text-xs">
+    <p>&copy; 2026 TOPKAPI GATE. Tüm hakları saklıdır.</p>
+  </footer>
+
+  <!-- DİREKT REST API İLE ANINDA VERİ ÇEKME -->
+  <script>
+    const SUPABASE_URL = 'https://idztvxoteubrpelwqums.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkenR2eG90ZXVicnBlbHdxdW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTAzOTYsImV4cCI6MjEwMTI2NjM5Nn0.n4gAZdnEXIm1fjPlxf1J4WTLPXG31UjZTyl_CGQrsTg';
+
+    async function fetchPostsDirectly() {
+      const container = document.getElementById('posts-container');
+      
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=*&order=id.desc`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Sunucu hatası: ' + response.status);
+        }
+
+        const posts = await response.json();
+
+        if (!posts || posts.length === 0) {
+          container.innerHTML = `
+            <div class="col-span-full text-center py-12 text-sky-200 bg-white/5 rounded-2xl border border-white/10">
+              <p>Henüz yayınlanmış bir blog yazısı bulunmuyor.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = posts.map(post => {
+          const dateStr = post.created_at ? new Date(post.created_at).toLocaleDateString('tr-TR') : '2026';
+          return `
+            <div class="bg-[#0B132B] border border-slate-800 hover:border-[#FFD230]/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between transition-all group">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="bg-[#FFD230]/20 text-[#FFD230] font-semibold px-2.5 py-1 rounded-md border border-[#FFD230]/30">${post.category || 'Genel'}</span>
+                  <span class="text-slate-400">${dateStr}</span>
+                </div>
+                <h2 class="font-heading text-lg font-bold text-white group-hover:text-[#FFD230] transition-colors leading-snug">
+                  ${post.title}
+                </h2>
+                <p class="text-slate-300 text-xs leading-relaxed line-clamp-3">
+                  ${post.content}
+                </p>
+              </div>
+
+              <div class="pt-5 mt-4 border-t border-slate-800/80">
+                <a href="post.html?id=${post.id}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#FFD230] hover:text-white transition-colors">
+                  <span>Devamını Oku</span>
+                  <span>→</span>
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Yazı yükleme hatası:', error);
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 text-rose-300 bg-rose-950/20 rounded-2xl border border-rose-800">
+            <p class="font-semibold">Yazılar yüklenirken bağlantı kurulamadı.</p>
+            <p class="text-xs text-rose-400 mt-1">${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    fetchPostsDirectly();
+  </script>
+</body>
+</html>
